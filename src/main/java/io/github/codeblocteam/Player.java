@@ -8,9 +8,9 @@ public class Player {
     private String name;
 
     /** The amount of XP the player has */
-    private BigDecimal xp;
+    private long xp;
 
-    public Player(String name, BigDecimal xp) {
+    public Player(String name, long xp) {
         setName(name);
         setXP(xp);
     }
@@ -35,7 +35,7 @@ public class Player {
      * Getter for the XP.
      * @return The amount of XP of the player.
      */
-    public BigDecimal getXP() {
+    public long getXP() {
         return xp;
     }
 
@@ -43,8 +43,15 @@ public class Player {
      * Setter for the XP.
      * @param xp The new amount of XP of the player.
      */
-    public void setXP(BigDecimal xp) {
-        this.xp = (xp == null ? BigDecimal.ZERO : xp);
+    public void setXP(long xp) {
+        this.xp = xp;
     }
 
+    @Override
+    public String toString() {
+        return "Player{" +
+                "name='" + name + '\'' +
+                ", xp=" + xp +
+                '}';
+    }
 }

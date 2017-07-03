@@ -5,15 +5,14 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
+import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.service.sql.SqlService;
 
 import javax.inject.Inject;
 import javax.sql.DataSource;
 import java.nio.file.Path;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Optional;
 
 @Plugin(id = "playermanager", name = "Player Manager", version = "0.0.1")
@@ -45,16 +44,14 @@ public class PlayerManager {
     private void initDB() throws SQLException {
         try (Connection conn = getDataSource(dbURL()).getConnection()) {
             conn.prepareStatement(
-                    "CREATE TABLE IF NOT EXISTS (" +
-                            "name TEXT PRIMARY KEY," +
-                            "xp INT)"
+                    "CREATE TABLE IF NOT EXISTS players (name VARCHAR(32) PRIMARY KEY, xp BIGINT)"
             ).execute();
         }
     }
 
     private Optional<Player> getPlayerFromResultSet(ResultSet res) throws SQLException {
         return res.next()
-                ? Optional.of(new Player(res.getString(1), res.getBigDecimal(2)))
+                ? Optional.of(new Player(res.getString(1), res.getLong(2)))
                 : Optional.empty();
     }
 
@@ -63,10 +60,26 @@ public class PlayerManager {
         initDB();
     }
 
+    @Listener
+    public void onPlayerJoin(ClientConnectionEvent.Login event) throws SQLException {
+        save(new Player(event.getProfile().getName().orElseThrow(() -> new SQLException("Connected player has no name")), 0));
+        logger.info(getByName("Kiligolo").toString());
+    }
+
     public Optional<Player> getByName(String name) throws SQLException {
         try (Connection conn = getDataSource(dbURL()).getConnection()) {
             ResultSet res = conn.prepareStatement("SELECT name, xp FROM players").executeQuery();
             return getPlayerFromResultSet(res);
+        }
+    }
+
+    public int save(Player player) throws SQLException {
+        try (Connection conn = getDataSource(dbURL()).getConnection()) {
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO players (name, xp) VALUES (?, ?)");
+
+            stmt.setString(1, player.getName());
+            stmt.setLong(2, player.getXP());
+            return stmt.executeUpdate();
         }
     }
 }
