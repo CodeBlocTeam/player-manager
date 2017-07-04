@@ -10,9 +10,13 @@ public class Player {
     /** The amount of XP the player has */
     private long xp;
 
-    public Player(String name, long xp) {
+    /** The password of the player. */
+    private String password;
+
+    public Player(String name, long xp, String password) {
         setName(name);
         setXP(xp);
+        setPassword(password);
     }
 
     /**
@@ -47,6 +51,15 @@ public class Player {
         this.xp = xp;
     }
 
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = (password == null ? "" : password);
+    }
+
     @Override
     public String toString() {
         return "Player{" +
@@ -54,4 +67,5 @@ public class Player {
                 ", xp=" + xp +
                 '}';
     }
+
 }
