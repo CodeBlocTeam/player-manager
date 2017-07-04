@@ -1,8 +1,6 @@
 package io.github.codeblocteam;
 
-import java.math.BigDecimal;
-
-public class Player {
+public class PlayerModel {
 
     /** The name (pseudo) of the player */
     private String name;
@@ -13,7 +11,7 @@ public class Player {
     /** The password of the player. */
     private String password;
 
-    public Player(String name, long xp, String password) {
+    public PlayerModel(String name, long xp, String password) {
         setName(name);
         setXP(xp);
         setPassword(password);
@@ -51,20 +49,28 @@ public class Player {
         this.xp = xp;
     }
 
-
+    /**
+     * Getter for the password.
+     * @return The password of the player.
+     */
     public String getPassword() {
         return password;
     }
 
+    /**
+     * Setter for the password
+     * @param password The new password of the player.
+     */
     public void setPassword(String password) {
         this.password = (password == null ? "" : password);
     }
 
     @Override
     public String toString() {
-        return "Player{" +
+        return "PlayerModel{" +
                 "name='" + name + '\'' +
                 ", xp=" + xp +
+                ", password='" + password + '\'' +
                 '}';
     }
 

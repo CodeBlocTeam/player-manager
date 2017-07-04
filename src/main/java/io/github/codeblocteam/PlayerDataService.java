@@ -14,14 +14,14 @@ public interface PlayerDataService {
      * @return The data about the player name
      * @throws Exception When the data could not be fetched.
      */
-    Optional<Player> getByName(String name) throws Exception;
+    Optional<PlayerModel> getByName(String name) throws Exception;
 
     /**
-     * Save player data.
+     * Save playerModel data.
      *
-     * @param player The data to save.
+     * @param playerModel The data to save.
      * @return The number of entries saved (1 if saved, 0 if not).
      * @throws Exception When the data could not be saved.
      */
-    int save(Player player) throws Exception;
+    int save(PlayerModel playerModel) throws Exception;
 }
